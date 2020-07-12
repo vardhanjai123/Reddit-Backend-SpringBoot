@@ -9,6 +9,7 @@ import com.jaivardhan.springbootredditclone.model.VerificationToken;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
 import com.jaivardhan.springbootredditclone.repository.VerificationTokenRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,11 @@ public class AuthService {
                         "http://localhost:8080/api/auth/verificationToken/"+token));
 
     }
+//    @Value("${recipientemail}")
+//    private String getRecipientMail(String recipientMail) {
+//        System.out.println("***********"+recipientMail+"*********************");
+//        return recipientMail;
+//    }
 
     private String generateVerificationToken(UserReddit userReddit) {
         String token=UUID.randomUUID().toString();
@@ -61,6 +67,8 @@ public class AuthService {
         verificationToken.orElseThrow(()->new SpringRedditException("Token does not exis"));
         fetchUserAndEnable(verificationToken.get());
     }
+
+
 
     private void fetchUserAndEnable(VerificationToken verificationToken) {
         Long userId=verificationToken.getUserReddit().getUserId();
