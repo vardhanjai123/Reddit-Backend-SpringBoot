@@ -6,27 +6,32 @@ import com.jaivardhan.springbootredditclone.service.AuthService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
-@NoArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+
+    private final AuthService authService;
 
     @PostMapping("/register")
-    public void register(@RequestBody RegisterRequest registerRequest)
+    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest)
     {
-        if(authService==null)
-            System.out.println("*****************Auth Service is null***********8");
+            if(authService==null)
+                System.out.println("*****************Auth Service is null***********8");
             authService.registerUser(registerRequest);
+            return new ResponseEntity<>("User Registration Successful",HttpStatus.OK);
+    }
+
+    @GetMapping("/verificationToken/{token}")
+    public ResponseEntity<String> verifyToken(@PathVariable String token)
+    {
+        authService.verifyToken(token);
+        return new ResponseEntity<>("Account Activated",HttpStatus.OK);
     }
 
 }
