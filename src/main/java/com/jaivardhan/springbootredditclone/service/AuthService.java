@@ -1,6 +1,8 @@
 package com.jaivardhan.springbootredditclone.service;
 
 
+import com.jaivardhan.springbootredditclone.dto.AuthenticationResponse;
+import com.jaivardhan.springbootredditclone.dto.LoginRequest;
 import com.jaivardhan.springbootredditclone.dto.RegisterRequest;
 import com.jaivardhan.springbootredditclone.exceptions.SpringRedditException;
 import com.jaivardhan.springbootredditclone.model.NotificationEmail;
@@ -9,7 +11,13 @@ import com.jaivardhan.springbootredditclone.model.VerificationToken;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
 import com.jaivardhan.springbootredditclone.repository.VerificationTokenRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +34,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailSendService mailSendService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
+    private final UserDetailsService userDetailsService;
 
     @Transactional
     public void registerUser(RegisterRequest registerRequest)
@@ -47,11 +58,6 @@ public class AuthService {
                         "http://localhost:8080/api/auth/verificationToken/"+token));
 
     }
-//    @Value("${recipientemail}")
-//    private String getRecipientMail(String recipientMail) {
-//        System.out.println("***********"+recipientMail+"*********************");
-//        return recipientMail;
-//    }
 
     private String generateVerificationToken(UserReddit userReddit) {
         String token=UUID.randomUUID().toString();
@@ -76,6 +82,28 @@ public class AuthService {
         userReddit.orElseThrow(()->new SpringRedditException("User does not exist"));
         userReddit.get().setEnabled(true);
         userRedditRepository.save(userReddit.get());
+
+    }
+
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authentication;
+        try {
+           authentication = authenticationManager.authenticate(
+                   new UsernamePasswordAuthenticationToken(
+                   loginRequest.getUserName(),
+                    loginRequest.getPassword()));
+        }catch (DisabledException e)
+        {
+            throw new SpringRedditException("User is disabled!!Please enable the user first to LOGIN");
+        }
+        catch (AuthenticationException e)
+        {
+            throw new SpringRedditException("Authentication Failed!!!");
+        }
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails user= userDetailsService.loadUserByUsername(loginRequest.getUserName());
+        String jwtToken=jwtProvider.generateToken(user);
+        return new AuthenticationResponse(loginRequest.getUserName(),jwtToken);
 
     }
 }
