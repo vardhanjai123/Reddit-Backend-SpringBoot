@@ -34,7 +34,19 @@ public class SubRedditController {
     public ResponseEntity<List<SubRedditDto>> getAllSubReddits()
     {
         List<SubRedditDto> subRedditDtoList=subRedditService.getAllSubReddits();
-       return ResponseEntity.status(HttpStatus.CREATED).body(subRedditDtoList);
+       return ResponseEntity.status(HttpStatus.OK).body(subRedditDtoList);
+    }
+
+    @GetMapping("/getSubReddit/{id}")
+    public ResponseEntity<SubRedditDto> getSubRedditById(@PathVariable Long id)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(subRedditService.getSubRedditById(id));
+    }
+
+    @GetMapping("/getSubReddit-byUsername/{username}")
+    public ResponseEntity<List<SubRedditDto>> getSubRedditByUsername(@PathVariable String username)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(subRedditService.getSubRedditByUsername(username));
     }
 
 }
