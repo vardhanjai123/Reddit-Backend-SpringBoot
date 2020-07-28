@@ -4,6 +4,7 @@ package com.jaivardhan.springbootredditclone.controller;
 import com.jaivardhan.springbootredditclone.dto.SubRedditDto;
 import com.jaivardhan.springbootredditclone.service.SubRedditService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequestMapping("/subreddit")
 @AllArgsConstructor
 public class SubRedditController {
+
 
     private final SubRedditService subRedditService;
 

@@ -12,6 +12,7 @@ import com.jaivardhan.springbootredditclone.repository.CommentRepository;
 import com.jaivardhan.springbootredditclone.repository.PostRepository;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,11 +24,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CommentService {
 
-     private final UtilityService utilityService;
-     private final PostRepository postRepository;
-     private final CommentRepository commentRepository;
-     private final MailSendService mailSendService;
-     private final UserRedditRepository userRedditRepository;
+
+         private final UtilityService utilityService;
+
+         private final PostRepository postRepository;
+
+         private final CommentRepository commentRepository;
+
+         private final MailSendService mailSendService;
+
+        private final  UserRedditRepository userRedditRepository;
 
     public CommentResponseDto create(CommentDto commentDto) {
            Comment comment=mapDtoToComment(commentDto);

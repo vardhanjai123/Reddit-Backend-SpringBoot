@@ -15,13 +15,17 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class SubRedditService {
 
+
     private final UserRedditRepository userRedditRepository;
+
     private final SubRedditRepository subRedditRepository;
+
     private final UtilityService utilityService;
+
 
     public void createSubReddit(SubRedditDto subRedditDto) {
         SubReddit subReddit=mapSubReddit(subRedditDto);

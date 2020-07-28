@@ -11,6 +11,7 @@ import com.jaivardhan.springbootredditclone.repository.PostRepository;
 import com.jaivardhan.springbootredditclone.repository.SubRedditRepository;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,11 +24,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PostService {
 
+
     private final AmazonS3Client amazonS3Client;
+
     private final SubRedditRepository subRedditRepository;
-    private final UtilityService utilityService;
-    private final PostRepository postRepository;
-    private final UserRedditRepository userRedditRepository;
+
+    private final  UtilityService utilityService;
+
+    private final  PostRepository postRepository;
+
+    private final  UserRedditRepository userRedditRepository;
 
     public PostResponseDto create(PostDto postDto) throws IOException {
         String imageUrl=imageUploadToS3(postDto.getImage());

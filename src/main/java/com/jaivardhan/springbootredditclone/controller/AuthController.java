@@ -5,7 +5,10 @@ import com.jaivardhan.springbootredditclone.dto.AuthenticationResponse;
 import com.jaivardhan.springbootredditclone.dto.LoginRequest;
 import com.jaivardhan.springbootredditclone.dto.RegisterRequest;
 import com.jaivardhan.springbootredditclone.service.AuthService;
+import com.jaivardhan.springbootredditclone.service.SubRedditService;
+import com.jaivardhan.springbootredditclone.service.UtilityService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +21,7 @@ import javax.validation.Valid;
 public class AuthController {
 
 
-    private final AuthService authService;
+   private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest registerRequest)

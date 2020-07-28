@@ -1,6 +1,7 @@
 package com.jaivardhan.springbootredditclone.config;
 import com.jaivardhan.springbootredditclone.service.JwtRequestFilter;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,11 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
-@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
-    private final JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private  UserDetailsService userDetailsService;
+    @Autowired
+    private  JwtRequestFilter jwtRequestFilter;
 
     @Bean
     @Override

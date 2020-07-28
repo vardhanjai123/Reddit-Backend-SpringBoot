@@ -11,6 +11,8 @@ import com.jaivardhan.springbootredditclone.model.VerificationToken;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
 import com.jaivardhan.springbootredditclone.repository.VerificationTokenRepository;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,13 +32,20 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AuthService {
 
-    private final UserRedditRepository userRedditRepository;
+
+    private final  UserRedditRepository userRedditRepository;
+
     private final PasswordEncoder passwordEncoder;
-    private final VerificationTokenRepository verificationTokenRepository;
-    private final MailSendService mailSendService;
-    private final AuthenticationManager authenticationManager;
+
+    private final  VerificationTokenRepository verificationTokenRepository;
+
+    private final   MailSendService mailSendService;
+
+    private final   AuthenticationManager authenticationManager;
+
     private final JwtProvider jwtProvider;
-    private final UserDetailsService userDetailsService;
+
+    private final  UserDetailsService userDetailsService;
 
     @Transactional
     public void registerUser(RegisterRequest registerRequest)

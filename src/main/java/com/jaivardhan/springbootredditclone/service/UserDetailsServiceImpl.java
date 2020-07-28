@@ -4,6 +4,7 @@ import com.jaivardhan.springbootredditclone.model.UserReddit;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -18,11 +19,12 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserRedditRepository userRedditRepository;
+
+    private final  UserRedditRepository userRedditRepository;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
