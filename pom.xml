@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
+		<spring-cloud.version>Hoxton.SR6</spring-cloud.version>
 	</properties>
 
 	<dependencies>
@@ -73,6 +74,10 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.20</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-aws</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -111,7 +116,17 @@
 
 
 	</dependencies>
-
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>
