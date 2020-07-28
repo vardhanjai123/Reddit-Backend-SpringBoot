@@ -22,7 +22,7 @@ public class Comment {
     private Long id;
 
     @NotEmpty
-    private Long text;
+    private String text;
 
     private Instant createdAt;
 
@@ -31,8 +31,6 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
-
-
 
 
 }
