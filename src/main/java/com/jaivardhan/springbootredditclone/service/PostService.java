@@ -79,5 +79,16 @@ public class PostService {
         return postResponseDto;
     }
 
+    public List<PostResponseDto> getAllPosts() {
+        return postRepository.findAll().stream().map(this::mapPostToDto).collect(Collectors.toList());
+    }
+
+    public PostResponseDto getPostById(Long id) {
+        Optional<Post> post=postRepository.findById(id);
+        post.orElseThrow(()->new SpringRedditException("Post with the id "+id+" does not exist"));
+        return mapPostToDto(post.get());
+    }
+
+
 
 }
