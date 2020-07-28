@@ -7,10 +7,9 @@ import com.jaivardhan.springbootredditclone.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/comment")
@@ -22,6 +21,18 @@ public class CommentController {
    public ResponseEntity<CommentResponseDto> create(@RequestBody CommentDto commentDto)
    {
       return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(commentDto));
+   }
+
+   @GetMapping("/getCommentsByPostId/{id}")
+   public ResponseEntity<List<CommentResponseDto>> getCommentsByPostId(@PathVariable Long id)
+   {
+      return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentsByPostId(id));
+   }
+
+   @GetMapping("/getCommentsByUsername/{userName}")
+   public ResponseEntity<List<CommentResponseDto>> getCommentsByUsername(@PathVariable String userName)
+   {
+      return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentsByUsername(userName));
    }
 
 }

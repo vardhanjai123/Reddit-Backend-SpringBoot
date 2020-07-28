@@ -7,13 +7,17 @@ import com.jaivardhan.springbootredditclone.exceptions.SpringRedditException;
 import com.jaivardhan.springbootredditclone.model.Comment;
 import com.jaivardhan.springbootredditclone.model.NotificationEmail;
 import com.jaivardhan.springbootredditclone.model.Post;
+import com.jaivardhan.springbootredditclone.model.UserReddit;
 import com.jaivardhan.springbootredditclone.repository.CommentRepository;
 import com.jaivardhan.springbootredditclone.repository.PostRepository;
+import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +27,7 @@ public class CommentService {
      private final PostRepository postRepository;
      private final CommentRepository commentRepository;
      private final MailSendService mailSendService;
+     private final UserRedditRepository userRedditRepository;
 
     public CommentResponseDto create(CommentDto commentDto) {
            Comment comment=mapDtoToComment(commentDto);
@@ -58,4 +63,17 @@ public class CommentService {
         return commentResponseDto;
     }
 
+    public List<CommentResponseDto> getCommentsByPostId(Long id) {
+        Optional<Post> post=postRepository.findById(id);
+        post.orElseThrow(()->new SpringRedditException("No post with this id exist"));
+        List<Comment> comments=commentRepository.findByPost(post.get());
+        return comments.stream().map(this::mapCommentToDto).collect(Collectors.toList());
+    }
+
+    public List<CommentResponseDto> getCommentsByUsername(String userName) {
+        Optional<UserReddit> userReddit=userRedditRepository.findByUserName(userName);
+        userReddit.orElseThrow(()->new SpringRedditException("User with this username does not exist"));
+        List<Comment> comments=commentRepository.findByUserReddit(userReddit.get());
+        return comments.stream().map(this::mapCommentToDto).collect(Collectors.toList());
+    }
 }
