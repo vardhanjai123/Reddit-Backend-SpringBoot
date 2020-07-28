@@ -6,6 +6,7 @@ import com.jaivardhan.springbootredditclone.dto.PostResponseDto;
 import com.jaivardhan.springbootredditclone.exceptions.SpringRedditException;
 import com.jaivardhan.springbootredditclone.model.Post;
 import com.jaivardhan.springbootredditclone.model.SubReddit;
+import com.jaivardhan.springbootredditclone.model.UserReddit;
 import com.jaivardhan.springbootredditclone.repository.PostRepository;
 import com.jaivardhan.springbootredditclone.repository.SubRedditRepository;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
@@ -94,6 +95,13 @@ public class PostService {
         subReddit.orElseThrow(()->new SpringRedditException(
                 "No SubReddit with the "+subRedditName +" name exists"));
         List<Post> posts=postRepository.findAllBySubReddit(subReddit.get());
+        return posts.stream().map(this::mapPostToDto).collect(Collectors.toList());
+    }
+
+    public List<PostResponseDto> getAllPostsByUsername(String userName) {
+        Optional<UserReddit> userReddit=userRedditRepository.findByUserName(userName);
+        userReddit.orElseThrow(()->new SpringRedditException("User with the username "+userName+" does not exists"));
+        List<Post> posts=postRepository.findAllByUserReddit(userReddit.get());
         return posts.stream().map(this::mapPostToDto).collect(Collectors.toList());
     }
 

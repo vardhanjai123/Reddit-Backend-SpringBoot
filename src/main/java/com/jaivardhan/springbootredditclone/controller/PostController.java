@@ -43,6 +43,12 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsInSubReddit(subRedditName));
     }
 
+    @GetMapping(value = "/getAllPostsByUsername/{userName}")
+    public ResponseEntity<List<PostResponseDto>> getAllPostsByUsername(@PathVariable String userName)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsByUsername(userName));
+    }
+
 
 
 }
