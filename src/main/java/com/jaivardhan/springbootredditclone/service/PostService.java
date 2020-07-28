@@ -89,6 +89,14 @@ public class PostService {
         return mapPostToDto(post.get());
     }
 
+    public List<PostResponseDto> getAllPostsInSubReddit(String subRedditName) {
+        Optional<SubReddit> subReddit=subRedditRepository.findByTopicName(subRedditName);
+        subReddit.orElseThrow(()->new SpringRedditException(
+                "No SubReddit with the "+subRedditName +" name exists"));
+        List<Post> posts=postRepository.findAllBySubReddit(subReddit.get());
+        return posts.stream().map(this::mapPostToDto).collect(Collectors.toList());
+    }
+
 
 
 }
