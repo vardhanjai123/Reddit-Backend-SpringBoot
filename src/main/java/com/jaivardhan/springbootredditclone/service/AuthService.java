@@ -3,9 +3,11 @@ package com.jaivardhan.springbootredditclone.service;
 
 import com.jaivardhan.springbootredditclone.dto.AuthenticationResponse;
 import com.jaivardhan.springbootredditclone.dto.LoginRequest;
+import com.jaivardhan.springbootredditclone.dto.RefreshTokenRequestDto;
 import com.jaivardhan.springbootredditclone.dto.RegisterRequest;
 import com.jaivardhan.springbootredditclone.exceptions.SpringRedditException;
 import com.jaivardhan.springbootredditclone.model.NotificationEmail;
+import com.jaivardhan.springbootredditclone.model.RefreshToken;
 import com.jaivardhan.springbootredditclone.model.UserReddit;
 import com.jaivardhan.springbootredditclone.model.VerificationToken;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
@@ -46,6 +48,8 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     private final  UserDetailsService userDetailsService;
+
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public void registerUser(RegisterRequest registerRequest)
@@ -112,7 +116,17 @@ public class AuthService {
 //        SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails user= userDetailsService.loadUserByUsername(loginRequest.getUserName());
         String jwtToken=jwtProvider.generateToken(user);
-        return new AuthenticationResponse(loginRequest.getUserName(),jwtToken);
+        RefreshToken refreshToken=refreshTokenService.generateRefreshToken();
 
+        return new AuthenticationResponse(loginRequest.getUserName(),jwtToken,Instant.now().plusMillis(900*1000),refreshToken.getToken());
+
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
+             refreshTokenService.validateRefreshToken(refreshTokenRequestDto.getRefreshToken());
+             UserDetails user=userDetailsService.loadUserByUsername(refreshTokenRequestDto.getUserName());
+             String jwtToken=jwtProvider.generateToken(user);
+             return new AuthenticationResponse(refreshTokenRequestDto.getUserName(),
+                     jwtToken,Instant.now().plusMillis(900*1000),refreshTokenRequestDto.getRefreshToken());
     }
 }
