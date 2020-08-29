@@ -1,6 +1,4 @@
 package com.jaivardhan.springbootredditclone.service;
-
-
 import com.jaivardhan.springbootredditclone.dto.AuthenticationResponse;
 import com.jaivardhan.springbootredditclone.dto.LoginRequest;
 import com.jaivardhan.springbootredditclone.dto.RefreshTokenRequestDto;
@@ -13,8 +11,7 @@ import com.jaivardhan.springbootredditclone.model.VerificationToken;
 import com.jaivardhan.springbootredditclone.repository.UserRedditRepository;
 import com.jaivardhan.springbootredditclone.repository.VerificationTokenRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,11 +23,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class AuthService {
 
@@ -51,20 +50,21 @@ public class AuthService {
 
     private final RefreshTokenService refreshTokenService;
 
+    private Clock clock;
+
+
     @Transactional
     public void registerUser(RegisterRequest registerRequest)
     {
-        if(userRedditRepository==null)
-            System.out.println("********userRedditRepository is null**********");
         UserReddit userReddit=new UserReddit();
 
         userReddit.setUserName(registerRequest.getUserName());
         userReddit.setEmail(registerRequest.getEmail());
         userReddit.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         userReddit.setEnabled(false);
-        userReddit.setCreatedAt(Instant.now());
+        Instant instant=clock.instant();
+        userReddit.setCreatedAt(instant);
         userRedditRepository.save(userReddit);
-
         String token=generateVerificationToken(userReddit);
         mailSendService.sendMail(new NotificationEmail("Account Activation",userReddit.getEmail(),
                 "Thanks for signing up.Please verify your email for further proceedings by clicking on the url "+
@@ -107,6 +107,7 @@ public class AuthService {
                     loginRequest.getPassword()));
         }catch (DisabledException e)
         {
+
             throw new SpringRedditException("User is disabled!!Please enable the user first to LOGIN");
         }
         catch (AuthenticationException e)
@@ -117,16 +118,18 @@ public class AuthService {
         UserDetails user= userDetailsService.loadUserByUsername(loginRequest.getUserName());
         String jwtToken=jwtProvider.generateToken(user);
         RefreshToken refreshToken=refreshTokenService.generateRefreshToken();
+        Instant instant=clock.instant();
 
-        return new AuthenticationResponse(loginRequest.getUserName(),jwtToken,Instant.now().plusMillis(900*1000),refreshToken.getToken());
+        return new AuthenticationResponse(loginRequest.getUserName(),jwtToken,instant.plusMillis(900*1000),refreshToken.getToken());
 
     }
 
     public AuthenticationResponse refreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
-             refreshTokenService.validateRefreshToken(refreshTokenRequestDto.getRefreshToken());
+            refreshTokenService.validateRefreshToken(refreshTokenRequestDto.getRefreshToken());
              UserDetails user=userDetailsService.loadUserByUsername(refreshTokenRequestDto.getUserName());
              String jwtToken=jwtProvider.generateToken(user);
+              Instant instant=clock.instant();
              return new AuthenticationResponse(refreshTokenRequestDto.getUserName(),
-                     jwtToken,Instant.now().plusMillis(900*1000),refreshTokenRequestDto.getRefreshToken());
+                     jwtToken,instant.plusMillis(900*1000),refreshTokenRequestDto.getRefreshToken());
     }
 }

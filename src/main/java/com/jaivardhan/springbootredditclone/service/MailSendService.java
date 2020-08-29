@@ -29,7 +29,7 @@ public class MailSendService {
     }
 
     @Async
-    void sendMail(NotificationEmail notificationEmail)
+    public void sendMail(NotificationEmail notificationEmail)
     {
 
         System.out.println(recipientMail);

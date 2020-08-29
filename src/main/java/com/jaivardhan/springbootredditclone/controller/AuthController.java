@@ -7,11 +7,7 @@ import com.jaivardhan.springbootredditclone.dto.RefreshTokenRequestDto;
 import com.jaivardhan.springbootredditclone.dto.RegisterRequest;
 import com.jaivardhan.springbootredditclone.service.AuthService;
 import com.jaivardhan.springbootredditclone.service.RefreshTokenService;
-import com.jaivardhan.springbootredditclone.service.SubRedditService;
-import com.jaivardhan.springbootredditclone.service.UtilityService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +19,6 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class AuthController {
 
-
    private final AuthService authService;
    private final RefreshTokenService refreshTokenService;
 
@@ -34,6 +29,7 @@ public class AuthController {
                 System.out.println("*****************Auth Service is null***********8");
             authService.registerUser(registerRequest);
             return new ResponseEntity<>("User Registration Successful",HttpStatus.OK);
+
     }
 
     @GetMapping("/verificationToken/{token}")
@@ -61,5 +57,7 @@ public class AuthController {
          refreshTokenService.deleteToken(refreshTokenRequestDto.getRefreshToken());
          return ResponseEntity.status(HttpStatus.OK).body("Logout done successfully!!");
     }
+
+
 
 }

@@ -17,6 +17,8 @@ import java.time.Instant;
 @Entity
 public class Comment {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -34,3 +36,5 @@ public class Comment {
 
 
 }
+
+

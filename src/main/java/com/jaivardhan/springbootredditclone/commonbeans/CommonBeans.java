@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.time.Clock;
+
 @Configuration
 public class CommonBeans {
     @Bean
@@ -18,4 +20,12 @@ public class CommonBeans {
         AmazonS3Client amazonS3Client=(AmazonS3Client)amazonS3ClientBuilder.build();
         return amazonS3Client;
     }
+
+    @Bean
+    public Clock getClock()
+    {
+        Clock clock=Clock.systemUTC();
+        return clock;
+    }
+
 }
